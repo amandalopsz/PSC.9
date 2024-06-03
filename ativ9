@@ -1,0 +1,163 @@
+abstract class PersonagemDragonBall {
+    String nome;
+    int idade;
+    char sexo;
+    int temporada;
+    int ki;
+    String poderEspecial;
+
+    public abstract int calcularPoder();
+}
+
+interface Transformavel {
+    void transformar(int nivel);
+}
+
+class Terraqueo extends PersonagemDragonBall {
+    String pais;
+    String cidade;
+
+    @Override
+    public int calcularPoder() {
+        return ki;
+    }
+
+    @Override
+    public String toString() {
+        return "Terraqueo: " + nome;
+    }
+}
+
+class Sayajin extends PersonagemDragonBall implements Transformavel {
+    int nivelMaximoSSJ;
+    boolean temRabo;
+    int nivelAtualSSJ;
+
+    @Override
+    public int calcularPoder() {
+        return (int) (ki * (1 + nivelMaximoSSJ * 0.1));
+    }
+
+    @Override
+    public void transformar(int nivel) {
+        if (nivel >= 1 && nivel <= 3) {
+            nivelAtualSSJ = nivel;
+            System.out.println(nome + " transformou para super sayajin nível " + nivel);
+        } else if ((nivel == 4 || nivel == 5) && (nome.equals("Goku") || nome.equals("Vegeta"))) {
+            nivelAtualSSJ = nivel;
+            System.out.println(nome + " transformou para super sayajin nível " + nivel);
+        } else {
+            System.out.println("Não foi possível transformar esse sayajin");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Sayajin: " + nome;
+    }
+}
+
+
+class Namekuseijin extends PersonagemDragonBall {
+    int quantidadeEsferas;
+    boolean podeCurar;
+
+    @Override
+    public int calcularPoder() {
+        return (int) (ki * (1 + (podeCurar ? 0.2 : 0)));
+    }
+
+    String fazerDesejo(String desejo) {
+    
+        return "Desejo em Namekusei: " + desejo;
+    }
+
+    @Override
+    public String toString() {
+        return "Namekuseijin: " + nome;
+    }
+}
+
+
+class PersonagemFactory {
+    static PersonagemDragonBall criarKuririn() {
+        Terraqueo kuririn = new Terraqueo();
+        kuririn.nome = "Kuririn";
+        kuririn.idade = 34;
+        kuririn.sexo = 'M';
+        kuririn.temporada = 1;
+        kuririn.ki = 2000;
+        kuririn.poderEspecial = "Kienzan";
+        kuririn.pais = "Terra";
+        kuririn.cidade = "Vila Pinguim";
+        return kuririn;
+    }
+
+    static PersonagemDragonBall criarGoku() {
+        Sayajin goku = new Sayajin();
+        goku.nome = "Goku";
+        goku.idade = 40;
+        goku.sexo = 'M';
+        goku.temporada = 1;
+        goku.ki = 10000;
+        goku.poderEspecial = "Kamehameha";
+        goku.nivelMaximoSSJ = 3;
+        goku.temRabo = false;
+        return goku;
+    }
+
+    static PersonagemDragonBall criarGohan() {
+        Sayajin gohan = new Sayajin();
+        gohan.nome = "Gohan";
+        gohan.idade = 18;
+        gohan.sexo = 'M';
+        gohan.temporada = 1;
+        gohan.ki = 8000;
+        gohan.poderEspecial = "Masenko";
+        gohan.nivelMaximoSSJ = 3;
+        gohan.temRabo = false;
+        return gohan;
+    }
+
+    static PersonagemDragonBall criarDende() {
+        Namekuseijin dende = new Namekuseijin();
+        dende.nome = "Dendê";
+        dende.idade = 12;
+        dende.sexo = 'M';
+        dende.temporada = 1;
+        dende.ki = 3000;
+        dende.poderEspecial = "Healing";
+        dende.quantidadeEsferas = 7;
+        dende.podeCurar = true;
+        return dende;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        
+        PersonagemDragonBall kuririn = PersonagemFactory.criarKuririn();
+        PersonagemDragonBall goku = PersonagemFactory.criarGoku();
+        PersonagemDragonBall gohan = PersonagemFactory.criarGohan();
+        PersonagemDragonBall dendê = PersonagemFactory.criarDende();
+
+        if (goku instanceof Sayajin) {
+            Sayajin gokuSayajin = (Sayajin) goku;
+            gokuSayajin.transformar(5);
+        }
+
+        if (gohan instanceof Sayajin) {
+            Sayajin gohanSayajin = (Sayajin) gohan;
+            if (gohanSayajin.calcularPoder() < 50000) {
+                gohanSayajin.transformar(3);
+            } else {
+                gohanSayajin.transformar(5);
+            }
+        }
+
+        if (dendê instanceof Namekuseijin) {
+            Namekuseijin dendeNamekuseijin = (Namekuseijin) dendê;
+            System.out.println(dendeNamekuseijin.fazerDesejo("Traga de volta todos que foram mortos por Freeza!"));
+        }
+    }
+}
